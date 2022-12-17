@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Runtime.Player.Components;
-using Runtime.Player.Components;
+﻿using Runtime.Player.Components;
 using UnityEngine;
 using Zenject;
 
@@ -9,6 +8,7 @@ namespace Runtime.Player
     {
         IPlayerReferences References { get; set; }
         IPlayerTrigger Trigger { get; set; }
+        IPlayerAnimator Animator { get; set; }
         IPlayerMovement Movement { get; set; }
     }
 
@@ -23,11 +23,13 @@ namespace Runtime.Player
             _ultimateJoystick = ultimateJoystick;
             References = GetComponent<IPlayerReferences>();
             Trigger = GetComponent<IPlayerTrigger>();
+            Animator = new PlayerAnimator(this);
             Movement = new PlayerMovement(ultimateJoystick, this);
         }
 
         public IPlayerReferences References { get; set; }
         public IPlayerTrigger Trigger { get; set; }
+        public IPlayerAnimator Animator { get; set; }
         public IPlayerMovement Movement { get; set; }
     }
 }

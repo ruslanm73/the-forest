@@ -1,8 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeMonoBehaviour : MonoBehaviour
+namespace Runtime.Level.Components
 {
+    public class TreeMonoBehaviour : MonoBehaviour
+    {
 
+    }
 }

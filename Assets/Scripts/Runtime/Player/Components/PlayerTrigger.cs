@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
+using Runtime.Level.Components;
 using UnityEngine;
 
-namespace Assets.Scripts.Runtime.Player.Components
+namespace Runtime.Player.Components
 {
     public interface IPlayerTrigger
     {

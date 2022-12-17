@@ -1,9 +1,8 @@
-﻿using Runtime.Player;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Animations;
 using Zenject;
 
-namespace Assets.Scripts.Runtime.Player
+namespace Runtime.Player
 {
     public interface IPlayerCamera
     {
@@ -22,15 +21,15 @@ namespace Assets.Scripts.Runtime.Player
 
         public void InitialPositionConstraint()
         {
-            var playerCameraPositionContraint = gameObject.GetComponent<PositionConstraint>();
+            var playerCameraPositionConstraint = gameObject.GetComponent<PositionConstraint>();
             var source = new ConstraintSource
             {
                 sourceTransform = _playerMonoBehaviour.References.PlayerRootTransform,
                 weight = 1
             };
 
-            playerCameraPositionContraint.AddSource(source);
-            playerCameraPositionContraint.constraintActive = true;
+            playerCameraPositionConstraint.AddSource(source);
+            playerCameraPositionConstraint.constraintActive = true;
         }
     }
 }

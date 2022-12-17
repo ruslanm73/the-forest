@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Runtime.Player.Components
 {
@@ -16,7 +15,7 @@ namespace Runtime.Player.Components
         private readonly MonoBehaviour _monoBehaviour;
         private readonly UltimateJoystick _ultimateJoystick;
         private readonly GameObject _playerGameObject;
-        private readonly Animator _playerAnimator;
+        private readonly IPlayerAnimator _playerAnimator;
 
         private IEnumerator _updatePlayerTransformEnumerator;
 
@@ -25,7 +24,7 @@ namespace Runtime.Player.Components
             _ultimateJoystick = ultimateJoystick;
             _monoBehaviour = playerMonoBehaviour.References.PlayerRootTransform.GetComponent<MonoBehaviour>();
             _playerGameObject = playerMonoBehaviour.References.PlayerRootTransform.gameObject;
-            _playerAnimator = playerMonoBehaviour.References.PlayerAnimator;
+            _playerAnimator = playerMonoBehaviour.Animator;
 
             _ultimateJoystick.OnPointerDownCallback += OnPointerJoystickDown;
             _ultimateJoystick.OnPointerUpCallback += OnPointerJoystickUp;
@@ -42,7 +41,7 @@ namespace Runtime.Player.Components
         private void OnPointerJoystickUp()
         {
             MovementAvailable = false;
-            _playerAnimator.SetFloat(PlayerSpeedValueName, default);
+            _playerAnimator.MovementState(default);
 
             _monoBehaviour.StopCoroutine(_updatePlayerTransformEnumerator);
         }
@@ -59,7 +58,7 @@ namespace Runtime.Player.Components
                 _playerGameObject.transform.eulerAngles = transformEulerAngles;
                 _playerGameObject.transform.Translate(_playerGameObject.transform.TransformDirection(Vector3.forward) * actualPlayerSpeed, Space.World);
 
-                _playerAnimator.SetFloat("PlayerSpeed", _ultimateJoystick.GetDistance());
+                _playerAnimator.MovementState(_ultimateJoystick.GetDistance());
 
                 yield return null;
             }

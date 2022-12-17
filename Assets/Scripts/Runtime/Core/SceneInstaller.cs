@@ -1,7 +1,5 @@
-using Assets.Scripts.Runtime.Player;
 using Runtime.Player;
 using UnityEngine;
-using UnityEngine.Animations;
 using Zenject;
 
 namespace Runtime.Core
