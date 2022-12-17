@@ -7,6 +7,7 @@ namespace Runtime.Player
     public interface IPlayerMonoBehaviour
     {
         IPlayerReferences PlayerReferences { get; set; }
+        IPlayerControl PlayerControl { get; set; }
     }
 
     public class PlayerMonoBehaviour : MonoBehaviour, IPlayerMonoBehaviour
@@ -19,9 +20,10 @@ namespace Runtime.Player
         {
             _ultimateJoystick = ultimateJoystick;
             PlayerReferences = GetComponent<IPlayerReferences>();
-            _playerControl = new PlayerControl(this, ultimateJoystick, gameObject, PlayerReferences.PlayerAnimator);
+            PlayerControl = new PlayerControl(ultimateJoystick, this);
         }
 
         public IPlayerReferences PlayerReferences { get; set; }
+        public IPlayerControl PlayerControl { get; set; }
     }
 }

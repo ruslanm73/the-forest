@@ -10,6 +10,7 @@ namespace Runtime.Player.Components
 
     public class PlayerControl : IPlayerControl
     {
+        private const string PlayerSpeedValueName = "PlayerSpeed";
         private readonly MonoBehaviour _monoBehaviour;
         private readonly UltimateJoystick _ultimateJoystick;
         private readonly GameObject _playerGameObject;
@@ -17,12 +18,12 @@ namespace Runtime.Player.Components
 
         private IEnumerator _updatePlayerTransformEnumerator;
 
-        public PlayerControl(MonoBehaviour monoBehaviour, UltimateJoystick ultimateJoystick, GameObject playerGameObject, Animator playerAnimator)
+        public PlayerControl(UltimateJoystick ultimateJoystick, IPlayerMonoBehaviour playerMonoBehaviour)
         {
-            _monoBehaviour = monoBehaviour;
             _ultimateJoystick = ultimateJoystick;
-            _playerGameObject = playerGameObject;
-            _playerAnimator = playerAnimator;
+            _monoBehaviour = playerMonoBehaviour.PlayerReferences.PlayerRootTransform.GetComponent<MonoBehaviour>();
+            _playerGameObject = playerMonoBehaviour.PlayerReferences.PlayerRootTransform.gameObject;
+            _playerAnimator = playerMonoBehaviour.PlayerReferences.PlayerAnimator;
 
             _ultimateJoystick.OnPointerDownCallback += OnPointerJoystickDown;
             _ultimateJoystick.OnPointerUpCallback += OnPointerJoystickUp;
@@ -39,7 +40,7 @@ namespace Runtime.Player.Components
         private void OnPointerJoystickUp()
         {
             PlayerMovementAvailable = false;
-            _playerAnimator.SetFloat("PlayerSpeed", default);
+            _playerAnimator.SetFloat(PlayerSpeedValueName, default);
 
             _monoBehaviour.StopCoroutine(_updatePlayerTransformEnumerator);
         }
