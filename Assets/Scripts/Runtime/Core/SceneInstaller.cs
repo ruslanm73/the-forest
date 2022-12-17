@@ -34,7 +34,6 @@ namespace Runtime.Core
         {
             var playerCameraGameObject = Container.InstantiatePrefabForComponent<IPlayerCamera>(playerCameraPrefab);
             Container.Bind<IPlayerCamera>().FromInstance(playerCameraGameObject).AsSingle();
-            playerCameraGameObject.InitialPositionConstraint();
         }
     }
 }
