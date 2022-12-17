@@ -4,11 +4,13 @@ using UnityEngine.EventSystems;
 
 namespace Runtime.Player.Components
 {
-    public interface IPlayerControl
+    public interface IPlayerMovement
     {
+        bool MovementAvailable { get; set; }
+        float MaxSpeed { get; set; }
     }
 
-    public class PlayerControl : IPlayerControl
+    public class PlayerMovement : IPlayerMovement
     {
         private const string PlayerSpeedValueName = "PlayerSpeed";
         private readonly MonoBehaviour _monoBehaviour;
@@ -18,12 +20,12 @@ namespace Runtime.Player.Components
 
         private IEnumerator _updatePlayerTransformEnumerator;
 
-        public PlayerControl(UltimateJoystick ultimateJoystick, IPlayerMonoBehaviour playerMonoBehaviour)
+        public PlayerMovement(UltimateJoystick ultimateJoystick, IPlayerMonoBehaviour playerMonoBehaviour)
         {
             _ultimateJoystick = ultimateJoystick;
-            _monoBehaviour = playerMonoBehaviour.PlayerReferences.PlayerRootTransform.GetComponent<MonoBehaviour>();
-            _playerGameObject = playerMonoBehaviour.PlayerReferences.PlayerRootTransform.gameObject;
-            _playerAnimator = playerMonoBehaviour.PlayerReferences.PlayerAnimator;
+            _monoBehaviour = playerMonoBehaviour.References.PlayerRootTransform.GetComponent<MonoBehaviour>();
+            _playerGameObject = playerMonoBehaviour.References.PlayerRootTransform.gameObject;
+            _playerAnimator = playerMonoBehaviour.References.PlayerAnimator;
 
             _ultimateJoystick.OnPointerDownCallback += OnPointerJoystickDown;
             _ultimateJoystick.OnPointerUpCallback += OnPointerJoystickUp;
@@ -31,7 +33,7 @@ namespace Runtime.Player.Components
 
         private void OnPointerJoystickDown()
         {
-            PlayerMovementAvailable = true;
+            MovementAvailable = true;
 
             _updatePlayerTransformEnumerator = PlayerMovementEnumerator();
             _monoBehaviour.StartCoroutine(_updatePlayerTransformEnumerator);
@@ -39,7 +41,7 @@ namespace Runtime.Player.Components
 
         private void OnPointerJoystickUp()
         {
-            PlayerMovementAvailable = false;
+            MovementAvailable = false;
             _playerAnimator.SetFloat(PlayerSpeedValueName, default);
 
             _monoBehaviour.StopCoroutine(_updatePlayerTransformEnumerator);
@@ -47,11 +49,11 @@ namespace Runtime.Player.Components
 
         private IEnumerator PlayerMovementEnumerator()
         {
-            while (PlayerMovementAvailable)
+            while (MovementAvailable)
             {
                 var verticalAxis = _ultimateJoystick.GetVerticalAxis();
                 var horizontalAxis = _ultimateJoystick.GetHorizontalAxis();
-                var actualPlayerSpeed = _ultimateJoystick.GetDistance() * PlayerMaxSpeed;
+                var actualPlayerSpeed = _ultimateJoystick.GetDistance() * MaxSpeed;
                 var transformEulerAngles = new Vector3(0, Mathf.Atan2(horizontalAxis, verticalAxis) * 180 / Mathf.PI, 0);
 
                 _playerGameObject.transform.eulerAngles = transformEulerAngles;
@@ -63,7 +65,7 @@ namespace Runtime.Player.Components
             }
         }
 
-        public bool PlayerMovementAvailable { get; set; }
-        public float PlayerMaxSpeed { get; set; } = 0.02f;
+        public bool MovementAvailable { get; set; }
+        public float MaxSpeed { get; set; } = 0.02f;
     }
 }

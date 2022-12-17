@@ -25,7 +25,7 @@ namespace Assets.Scripts.Runtime.Player
             var playerCameraPositionContraint = gameObject.GetComponent<PositionConstraint>();
             var source = new ConstraintSource
             {
-                sourceTransform = _playerMonoBehaviour.PlayerReferences.PlayerRootTransform,
+                sourceTransform = _playerMonoBehaviour.References.PlayerRootTransform,
                 weight = 1
             };
 

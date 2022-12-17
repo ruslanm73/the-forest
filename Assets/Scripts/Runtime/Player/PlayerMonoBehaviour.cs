@@ -6,24 +6,24 @@ namespace Runtime.Player
 {
     public interface IPlayerMonoBehaviour
     {
-        IPlayerReferences PlayerReferences { get; set; }
-        IPlayerControl PlayerControl { get; set; }
+        IPlayerReferences References { get; set; }
+        IPlayerMovement Movement { get; set; }
     }
 
     public class PlayerMonoBehaviour : MonoBehaviour, IPlayerMonoBehaviour
     {
         private UltimateJoystick _ultimateJoystick;
-        private IPlayerControl _playerControl;
+        private IPlayerMovement _playerControl;
 
         [Inject]
         public void Constructor(UltimateJoystick ultimateJoystick)
         {
             _ultimateJoystick = ultimateJoystick;
-            PlayerReferences = GetComponent<IPlayerReferences>();
-            PlayerControl = new PlayerControl(ultimateJoystick, this);
+            References = GetComponent<IPlayerReferences>();
+            Movement = new PlayerMovement(ultimateJoystick, this);
         }
 
-        public IPlayerReferences PlayerReferences { get; set; }
-        public IPlayerControl PlayerControl { get; set; }
+        public IPlayerReferences References { get; set; }
+        public IPlayerMovement Movement { get; set; }
     }
 }
