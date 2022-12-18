@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Zenject;
 
 namespace Runtime.Player.Components
 {
@@ -12,19 +13,20 @@ namespace Runtime.Player.Components
     public class PlayerMovement : IPlayerMovement
     {
         private const string PlayerSpeedValueName = "PlayerSpeed";
-        private readonly MonoBehaviour _monoBehaviour;
         private readonly UltimateJoystick _ultimateJoystick;
-        private readonly GameObject _playerGameObject;
+        private readonly MonoBehaviour _monoBehaviour;
+        private readonly Transform _playerTransform;
         private readonly IPlayerAnimator _playerAnimator;
 
         private IEnumerator _updatePlayerTransformEnumerator;
 
-        public PlayerMovement(UltimateJoystick ultimateJoystick, IPlayerMonoBehaviour playerMonoBehaviour)
+        [Inject]
+        public PlayerMovement(UltimateJoystick ultimateJoystick, IPlayerReferences playerReferences, IPlayerAnimator playerAnimator)
         {
             _ultimateJoystick = ultimateJoystick;
-            _monoBehaviour = playerMonoBehaviour.References.PlayerRootTransform.GetComponent<MonoBehaviour>();
-            _playerGameObject = playerMonoBehaviour.References.PlayerRootTransform.gameObject;
-            _playerAnimator = playerMonoBehaviour.Animator;
+            _monoBehaviour = playerReferences.PlayerRootTransform.GetComponent<MonoBehaviour>();
+            _playerTransform = playerReferences.PlayerRootTransform;
+            _playerAnimator = playerAnimator;
 
             _ultimateJoystick.OnPointerDownCallback += OnPointerJoystickDown;
             _ultimateJoystick.OnPointerUpCallback += OnPointerJoystickUp;
@@ -55,8 +57,8 @@ namespace Runtime.Player.Components
                 var actualPlayerSpeed = _ultimateJoystick.GetDistance() * MaxSpeed;
                 var transformEulerAngles = new Vector3(0, Mathf.Atan2(horizontalAxis, verticalAxis) * 180 / Mathf.PI, 0);
 
-                _playerGameObject.transform.eulerAngles = transformEulerAngles;
-                _playerGameObject.transform.Translate(_playerGameObject.transform.TransformDirection(Vector3.forward) * actualPlayerSpeed, Space.World);
+                _playerTransform.eulerAngles = transformEulerAngles;
+                _playerTransform.Translate(_playerTransform.TransformDirection(Vector3.forward) * actualPlayerSpeed, Space.World);
 
                 _playerAnimator.MovementState(_ultimateJoystick.GetDistance());
 

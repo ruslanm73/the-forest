@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Zenject;
 
 namespace Runtime.Player.Components
 {
@@ -12,9 +13,10 @@ namespace Runtime.Player.Components
         private static readonly int PlayerSpeed = Animator.StringToHash("PlayerSpeed");
         private readonly Animator _animator;
 
-        public PlayerAnimator(IPlayerMonoBehaviour playerMonoBehaviour)
+        [Inject]
+        public PlayerAnimator(IPlayerReferences playerReferences)
         {
-            _animator = playerMonoBehaviour.References.PlayerAnimator;
+            _animator = playerReferences.PlayerAnimator;
         }
 
         public void MovementState(float value)

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Runtime.Player.Components;
+using UnityEngine;
 using UnityEngine.Animations;
 using Zenject;
 
@@ -11,13 +12,13 @@ namespace Runtime.Player
 
     public class PlayerCamera : MonoBehaviour, IPlayerCamera
     {
-        private IPlayerMonoBehaviour _playerMonoBehaviour;
+        private IPlayerReferences _playerReferences;
         private PositionConstraint _positionConstraint;
 
         [Inject]
-        public void Constructor(IPlayerMonoBehaviour playerMonoBehaviour)
+        public void Constructor(IPlayerReferences playerReferences)
         {
-            _playerMonoBehaviour = playerMonoBehaviour;
+            _playerReferences = playerReferences;
             _positionConstraint = GetComponent<PositionConstraint>();
 
             InitialPositionConstraint();
@@ -27,7 +28,7 @@ namespace Runtime.Player
         {
             var source = new ConstraintSource
             {
-                sourceTransform = _playerMonoBehaviour.References.PlayerRootTransform,
+                sourceTransform = _playerReferences.PlayerRootTransform,
                 weight = 1
             };
 
